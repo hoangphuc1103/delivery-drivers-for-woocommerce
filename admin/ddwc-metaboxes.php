@@ -33,7 +33,7 @@ add_action( 'add_meta_boxes', 'ddwc_metaboxes' );
 
 /**
  * Building the metabox
- * 
+ *
  * @return string
  */
 function ddwc_build() {
@@ -46,6 +46,27 @@ function ddwc_build() {
     // Get the driver data if its already been entered.
     $ddwc_driver_id = get_post_meta( $post->ID, 'ddwc_driver_id', true );
 
+    // Get all drivers.
+    $driver_args = array(
+        'role' => 'driver',
+    );
+    $drivers = get_users( $driver_args );
+
+    // Create empty array.
+    $available_drivers = array();
+
+    // Loop through drivers.
+    foreach ( $drivers as $driver ) {
+        if ( get_user_meta( $driver->ID, 'ddwc_driver_availability', true ) ) {
+            // Add driver to availabile list.
+            $available_drivers[] = $driver->ID;
+        }
+    }
+    if(count($available_drivers) == 0){
+        echo '<p>No available drivers</p>';
+        return;
+    }
+
     // Echo Delivery Driver Metabox Input Field.
     echo '<div class="ddwc-driver-box">';
     wp_dropdown_users( array(
@@ -55,7 +76,8 @@ function ddwc_build() {
         'id'               => 'ddwc_driver_id',
         'selected'         => $ddwc_driver_id,
         'class'            => 'widefat',
-        'show'             => 'display_name'
+        'show'             => 'display_name',
+        'include'          => $available_drivers
     ) );
     echo '</div>';
 

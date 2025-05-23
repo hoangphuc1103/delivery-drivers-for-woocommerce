@@ -38,7 +38,7 @@ class Delivery_Drivers_Admin {
      *
      * @param string $_plugin_name The name of this plugin.
      * @param string $_version     The version of this plugin.
-     * 
+     *
      * @since  1.0.0
      * @return void
      */
@@ -78,10 +78,10 @@ class Delivery_Drivers_Admin {
 /**
  * Add Deliver Driver Column to Orders screen
  *
- * @param array $columns 
- * 
+ * @param array $columns
+ *
  * @since  2.1
- * @return array $columns  
+ * @return array $columns
  */
 function ddwc_show_custom_delivery_driver_column( $columns ) {
 
@@ -115,8 +115,8 @@ add_filter( 'manage_edit-shop_order_columns', 'ddwc_show_custom_delivery_driver_
 /**
  * Delivery Driver column for Orders screen
  *
- * @param [type] $column 
- * 
+ * @param [type] $column
+ *
  * @since  2.1
  * @return string
  */
@@ -152,7 +152,10 @@ function ddwc_custom_delivery_driver_column( $column ) {
         }
 
         // Add active driver to available list.
-        $available_drivers[] = $ddwc_driver_id;
+        if(count($available_drivers) == 0){
+            echo '<b>No available drivers</b>';
+            return;
+        }
 
         // Echo Delivery Driver Metabox Input Field.
         echo '<div class="ddwc-driver-box">';
@@ -176,10 +179,10 @@ add_action( 'manage_shop_order_posts_custom_column', 'ddwc_custom_delivery_drive
 /**
  * Add "no-link" class to tr's from WooCommerce orders screen
  *
- * @param string $classes 
- * 
+ * @param string $classes
+ *
  * @since  2.1
- * @return string $classes 
+ * @return string $classes
  */
 function ddwc_add_no_link_to_woocommerce_orders( $classes ) {
     if ( current_user_can( 'manage_woocommerce' ) ) {
@@ -248,7 +251,7 @@ add_action( 'wp_ajax_ddwc_delivery_driver_settings', 'ddwc_delivery_driver_setti
 function ddwc_driver_availability_update() {
 
     $user_id    = filter_input( INPUT_POST, 'user_id' );
-    $meta_value = filter_input( INPUT_POST, 'metavalue' );
+    $meta_value = get_user_meta( $user_id, 'ddwc_driver_availability', true );
     $new_value  = '';
     $old_value  = 'on';
 
@@ -267,10 +270,10 @@ add_action( 'wp_ajax_ddwc_driver_availability_update', 'ddwc_driver_availability
  *
  * Add delivery drivers to the bulk actions for WooCommerce Orders.
  *
- * @param array $actions 
- * 
+ * @param array $actions
+ *
  * @since  2.5
- * @return array $actions 
+ * @return array $actions
  */
 function ddwc_driver_bulk_edit( $actions ) {
     // Add order status changes.
@@ -300,10 +303,10 @@ add_filter( 'bulk_actions-edit-shop_order', 'ddwc_driver_bulk_edit', 20, 1 );
  * Processes the selected options from the bulk actions list in the
  * WooCommerce Orders screen.
  *
- * @param [type] $redirect_to 
- * @param [type] $action 
- * @param [type] $post_ids 
- * 
+ * @param [type] $redirect_to
+ * @param [type] $action
+ * @param [type] $post_ids
+ *
  * @since  2.5
  * @return string
  */

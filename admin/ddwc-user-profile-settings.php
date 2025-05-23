@@ -18,8 +18,8 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Save custom profile fields in user profile.
  *
- * @param int $user_id 
- * 
+ * @param int $user_id
+ *
  * @since  1.6
  * @return string|void
  */
@@ -53,8 +53,10 @@ function ddwc_save_custom_profile_fields( $user_id ) {
             update_user_meta( $user_id, 'ddwc_driver_vehicle_color', esc_html( $vehicle_color ) );
         }
         // Update driver availability.
-        if ( isset( $driver_availability ) ) {
-            update_user_meta( $user_id, 'ddwc_driver_availability', esc_html( $driver_availability ) );
+        if( isset($driver_availability) ){
+            update_user_meta($user_id, 'ddwc_driver_availability', 'on' );
+        }else{
+            update_user_meta($user_id, 'ddwc_driver_availability', '' );
         }
         // Remove driver picture from user profile.
         if ( isset( $remove_picture ) ) {
@@ -107,8 +109,8 @@ add_action( 'woocommerce_save_account_details', 'ddwc_save_custom_profile_fields
 
 /**
  * Add profile options to Edit User screen
- * 
- * @param int $profileuser 
+ *
+ * @param int $profileuser
  *
  * @since  1.6
  * @return string
